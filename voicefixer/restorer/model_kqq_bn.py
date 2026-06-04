@@ -143,10 +143,12 @@ class UNetResComplex_100Mb(nn.Module):
 
         # Pad spectrogram to be evenly divided by downsample ratio.
         origin_len = x.shape[2]  # time_steps
-        pad_len = (
-            int(np.ceil(x.shape[2] / self.downsample_ratio)) * self.downsample_ratio
-            - origin_len
-        )
+        # pad_len = (
+        #     int(np.ceil(x.shape[2] / self.downsample_ratio)) * self.downsample_ratio
+        #     - origin_len
+        # )
+        ratio = self.downsample_ratio
+        pad_len = (ratio - (origin_len % ratio)) % ratio
         x = F.pad(x, pad=(0, 0, 0, pad_len))
         x = x[..., 0 : x.shape[-1] - 1]  # (bs, channels, T, F)
 
@@ -178,6 +180,8 @@ class UNetResComplex_100Mb(nn.Module):
         x = x[:, :, 0:origin_len, :]
 
         output_dict = {"mel": x}
+        # output_dict = {"mel": pad_len}
+
         return output_dict
 
 

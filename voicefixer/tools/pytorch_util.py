@@ -16,10 +16,8 @@ def try_tensor_cuda(tensor, cuda):
 
 
 def to_log(input):
-    assert torch.sum(input < 0) == 0, (
-        str(input) + " has negative values counts " + str(torch.sum(input < 0))
-    )
-    return torch.log10(torch.clip(input, min=1e-8))
+    input = torch.clamp(input, min=1e-8)
+    return torch.log10(input)
 
 
 def from_log(input):

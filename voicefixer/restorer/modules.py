@@ -149,6 +149,7 @@ class DecoderBlockRes(nn.Module):
     def forward(self, input_tensor, concat_tensor, both=False):
         x = self.conv1(F.relu_(self.bn1(input_tensor)))
         x = self.prune(x, both=both)
+        # x = x[:, :, :concat_tensor.shape[2], :concat_tensor.shape[3]]
         x = torch.cat((x, concat_tensor), dim=1)
         x = self.conv_block2(x)
         x = self.conv_block3(x)
